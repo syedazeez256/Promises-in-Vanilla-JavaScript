@@ -156,28 +156,69 @@ const renderCountry = function (data) {
 // });
 // console.log('end');
 
-const lotteryTicket = new Promise(function (res, rej) {
-  console.log('Lottery Happening');
-  setTimeout(() => {
-    if (Math.random() > 0.5) {
-      res('You WON the Game ! ');
-    } else {
-      rej('You LOSE the Game');
-    }
-  }, 2000);
-});
+// const lotteryTicket = new Promise(function (res, rej) {
+//   console.log('Lottery Happening');
+//   setTimeout(() => {
+//     if (Math.random() > 0.5) {
+//       res('You WON the Game ! ');
+//     } else {
+//       rej('You LOSE the Game');
+//     }
+//   }, 2000);
+// });
 
-lotteryTicket.then(res => console.log(res)).catch(err => console.error(err));
+// lotteryTicket.then(res => console.log(res)).catch(err => console.error(err));
 
-const wait = function (sec) {
-  return new Promise(function (res) {
-    setTimeout(res, sec * 1000);
+// const wait = function (sec) {
+//   return new Promise(function (res) {
+//     setTimeout(res, sec * 1000);
+//   });
+// };
+
+// wait(2)
+//   .then(() => {
+//     console.log('2 Seconds Passed ');
+//     return wait(1);
+//   })
+//   .then(() => console.log('1 Seconds Passed '));
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
 
-wait(2)
-  .then(() => {
-    console.log('2 Seconds Passed ');
-    return wait(1);
-  })
-  .then(() => console.log('1 Seconds Passed '));
+// getPosition().then(pos => console.log(pos));
+
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longtitude: lon } = pos.coords;
+      return fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`);
+    })
+    .then(response => {
+      console.log(response);
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+      response.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.city}, ${data.country} `);
+
+      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+    })
+    .then(resp => {
+      if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
+
+      return resp.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+    })
+    .catch(err => {
+      console.error(err.message);
+    });
+};
+
+btn.addEventListener('click', whereAmI);
