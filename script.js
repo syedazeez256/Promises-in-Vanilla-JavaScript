@@ -145,13 +145,39 @@ const renderCountry = function (data) {
 // whereAmI(19.037, 72.873);
 // whereAmI(-33.933, 18.474);
 
-console.log('start');
-setTimeout(() => {
-  console.log('set time out');
-}, 0);
-Promise.resolve('Resolved promise 1').then(res => console.log(res));
-Promise.resolve('Resolved promise 2').then(res => {
-  for (let i = 0; i < 10000000; i++) {}
-  console.log(res);
+// console.log('start');
+// setTimeout(() => {
+//   console.log('set time out');
+// }, 0);
+// Promise.resolve('Resolved promise 1').then(res => console.log(res));
+// Promise.resolve('Resolved promise 2').then(res => {
+//   for (let i = 0; i < 10000000; i++) {}
+//   console.log(res);
+// });
+// console.log('end');
+
+const lotteryTicket = new Promise(function (res, rej) {
+  console.log('Lottery Happening');
+  setTimeout(() => {
+    if (Math.random() > 0.5) {
+      res('You WON the Game ! ');
+    } else {
+      rej('You LOSE the Game');
+    }
+  }, 2000);
 });
-console.log('end');
+
+lotteryTicket.then(res => console.log(res)).catch(err => console.error(err));
+
+const wait = function (sec) {
+  return new Promise(function (res) {
+    setTimeout(res, sec * 1000);
+  });
+};
+
+wait(2)
+  .then(() => {
+    console.log('2 Seconds Passed ');
+    return wait(1);
+  })
+  .then(() => console.log('1 Seconds Passed '));
