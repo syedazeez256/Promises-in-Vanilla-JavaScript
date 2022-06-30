@@ -114,33 +114,44 @@ const renderCountry = function (data) {
 // });
 
 // Showing Country by its Coordinates//
-const whereAmI = function (lat, lon) {
-  fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`)
-    .then(response => {
-      console.log(response);
-      if (!response.ok)
-        throw new Error(`Country not found (${response.status})`);
-      response.json();
-    })
-    .then(data => {
-      console.log(data);
-      console.log(`You are in ${data.city}, ${data.country} `);
+// const whereAmI = function (lat, lon) {
+//   fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`)
+//     .then(response => {
+//       console.log(response);
+//       if (!response.ok)
+//         throw new Error(`Country not found (${response.status})`);
+//       response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       console.log(`You are in ${data.city}, ${data.country} `);
 
-      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
-    })
-    .then(resp => {
-      if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
+//       return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+//     })
+//     .then(resp => {
+//       if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
 
-      return resp.json();
-    })
-    .then(data => {
-      renderCountry(data[0]);
-    })
-    .catch(err => {
-      console.error(err.message);
-    });
-};
+//       return resp.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//     })
+//     .catch(err => {
+//       console.error(err.message);
+//     });
+// };
 
-whereAmI(52.508, 13.381);
-whereAmI(19.037, 72.873);
-whereAmI(-33.933, 18.474);
+// whereAmI(52.508, 13.381);
+// whereAmI(19.037, 72.873);
+// whereAmI(-33.933, 18.474);
+
+console.log('start');
+setTimeout(() => {
+  console.log('set time out');
+}, 0);
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+Promise.resolve('Resolved promise 2').then(res => {
+  for (let i = 0; i < 10000000; i++) {}
+  console.log(res);
+});
+console.log('end');
