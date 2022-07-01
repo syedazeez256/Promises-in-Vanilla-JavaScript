@@ -256,7 +256,7 @@ createImage('img/img-1.jpg')
   })
   .then(() => {
     currentImage.style.display = 'none';
-    return currentImage('img/img-2.jpg');
+    return createImage('img/img-2.jpg');
   })
   .then(img => {
     currentImage = img;
