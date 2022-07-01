@@ -1,27 +1,27 @@
 'use strict';
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
+// const btn = document.querySelector('.btn-country');
+// const countriesContainer = document.querySelector('.countries');
 
-const renderCountry = function (data) {
-  console.log(data);
-  const html = `
-    <article class="country">
-      <img class="country__img" src="${data.flags.svg}" />
-      <div class="country__data">
-        <h3 class="country__name">${data.name.common}</h3>
-        <h4 class="country__region">${data.region}</h4>
-        <p class="country__row"><span>👫</span>${(
-          +data.population / 1000000
-        ).toFixed(1)} people</p>
-        <p class="country__row"><span>🗣️</span>${data.languages.por}</p>
-        <p class="country__row"><span>💰</span>${data.currencies.EUR.name}</p>
-      </div>
-    </article>
-    `;
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
+// const renderCountry = function (data) {
+//   console.log(data);
+//   const html = `
+//     <article class="country">
+//       <img class="country__img" src="${data.flags.svg}" />
+//       <div class="country__data">
+//         <h3 class="country__name">${data.name.common}</h3>
+//         <h4 class="country__region">${data.region}</h4>
+//         <p class="country__row"><span>👫</span>${(
+//           +data.population / 1000000
+//         ).toFixed(1)} people</p>
+//         <p class="country__row"><span>🗣️</span>${data.languages.por}</p>
+//         <p class="country__row"><span>💰</span>${data.currencies.EUR.name}</p>
+//       </div>
+//     </article>
+//     `;
+//   countriesContainer.insertAdjacentHTML('beforeend', html);
+//   countriesContainer.style.opacity = 1;
+// };
 
 // const renderError = function (msg) {
 //   countriesContainer.insertAdjacentText('beforeend', msg);
@@ -182,43 +182,72 @@ const renderCountry = function (data) {
 //   })
 //   .then(() => console.log('1 Seconds Passed '));
 
-const getPosition = function () {
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
+
+//  getPosition().then(pos => console.log(pos));
+
+// const whereAmI = function () {
+//   getPosition()
+//     .then(pos => {
+//       const { latitude: lat, longtitude: lon } = pos.coords;
+//       return fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`);
+//     })
+//     .then(response => {
+//       console.log(response);
+//       if (!response.ok)
+//         throw new Error(`Country not found (${response.status})`);
+//       response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       console.log(`You are in ${data.city}, ${data.country} `);
+
+//       return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+//     })
+//     .then(resp => {
+//       if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
+
+//       return resp.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//     })
+//     .catch(err => {
+//       console.error(err.message);
+//     });
+// };
+
+// btn.addEventListener('click', whereAmI);
+
+const imageContainer = document.querySelector('.images');
+let currentImage;
+
+const createImage = function (img) {
   return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+    const image = document.createElement('img');
+    image.src = img;
+
+    image.addEventListener('load', function () {
+      imageContainer.append(image);
+      resolve(image);
+    });
+
+    image.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
   });
 };
 
-// getPosition().then(pos => console.log(pos));
-
-const whereAmI = function () {
-  getPosition()
-    .then(pos => {
-      const { latitude: lat, longtitude: lon } = pos.coords;
-      return fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`);
-    })
-    .then(response => {
-      console.log(response);
-      if (!response.ok)
-        throw new Error(`Country not found (${response.status})`);
-      response.json();
-    })
-    .then(data => {
-      console.log(data);
-      console.log(`You are in ${data.city}, ${data.country} `);
-
-      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
-    })
-    .then(resp => {
-      if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
-
-      return resp.json();
-    })
-    .then(data => {
-      renderCountry(data[0]);
-    })
-    .catch(err => {
-      console.error(err.message);
-    });
-};
-
-btn.addEventListener('click', whereAmI);
+createImage('img/img-1.jpg')
+  .then(img => {
+    currentImage = img;
+    console.log('Image-1 Loaded');
+  })
+  .then(() => {
+    currentImage.style.display = 'none';
+  })
+  .catch(err => console.error(err));
