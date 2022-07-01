@@ -223,6 +223,12 @@
 
 // btn.addEventListener('click', whereAmI);
 
+const wait = function (sec) {
+  return new Promise(function (res) {
+    setTimeout(res, sec * 1000);
+  });
+};
+
 const imageContainer = document.querySelector('.images');
 let currentImage;
 
@@ -246,6 +252,16 @@ createImage('img/img-1.jpg')
   .then(img => {
     currentImage = img;
     console.log('Image-1 Loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currentImage.style.display = 'none';
+    return currentImage('img/img-2.jpg');
+  })
+  .then(img => {
+    currentImage = img;
+    console.log('Image-2 Loaded');
+    return wait(2);
   })
   .then(() => {
     currentImage.style.display = 'none';
